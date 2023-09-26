@@ -21,35 +21,56 @@ type LevelRepository interface {
 	FindUsersByLevelId(levelId string) ([]*User, error)
 }
 
-type Level struct {
+type Permission struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
-	AccountId string `json:"account_id"`
+	CompanyID string `json:"company_id"`
 }
 
-func NewLevel(name string, companyId string) *Level {
+func NewPermission(name string, companyId string) *Permission {
 	id := utils.NewUUID()
-	return &Level{
+	return &Permission{
 		ID:        id,
 		Name:      name,
-		AccountId: companyId,
+		CompanyID: companyId,
+	}
+}
+
+type Level struct {
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	CompanyId   string   `json:"company_id"`
+	Permissions []string `json:"permissions"`
+}
+
+func NewLevel(
+	name string,
+	companyId string,
+	permissions []string,
+) *Level {
+	id := utils.NewUUID()
+	return &Level{
+		ID:          id,
+		Name:        name,
+		CompanyId:   companyId,
+		Permissions: permissions,
 	}
 }
 
 type User struct {
-	ID        string  `json:"id"`
-	Name      string  `json:"name"`
-	Email     string  `json:"email"`
-	Phone     float64 `json:"phone"`
-	Password  string  `json:"password"`
-	LevelId   string  `json:"level_id"`
-	AccountId string  `json:"account_id"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone"`
+	Password  string `json:"password"`
+	LevelId   string `json:"level_id"`
+	CompanyId string `json:"company_id"`
 }
 
 func NewUser(
 	name string,
 	email string,
-	phone float64,
+	phone string,
 	password string,
 	levelId string,
 	companyId string,
@@ -62,6 +83,6 @@ func NewUser(
 		Phone:     phone,
 		Password:  password,
 		LevelId:   levelId,
-		AccountId: companyId,
+		CompanyId: companyId,
 	}
 }
