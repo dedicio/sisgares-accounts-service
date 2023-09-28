@@ -179,45 +179,6 @@ func (ar *AddressRepositoryMysql) Delete(id string) error {
 	return nil
 }
 
-func (ar *AddressRepositoryMysql) FindAddressByCompanyId(companyId string) (*entity.Address, error) {
-	var address entity.Address
-
-	sqlStatement := `
-		SELECT
-			id,
-			street,
-			number,
-			complement,
-			neighborhood,
-			city,
-			state,
-			country,
-			zip_code,
-			company_id
-		FROM addresses
-		WHERE company_id = ?
-			AND deleted_at IS NULL
-	`
-	err := ar.db.QueryRow(sqlStatement, companyId).Scan(
-		&address.ID,
-		&address.Street,
-		&address.Number,
-		&address.Complement,
-		&address.Neighborhood,
-		&address.City,
-		&address.State,
-		&address.Country,
-		&address.ZipCode,
-		&address.CompanyId,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &address, nil
-}
-
 func (ar *AddressRepositoryMysql) DeleteByCompanyId(companyId string) error {
 	sql := `
 		UPDATE

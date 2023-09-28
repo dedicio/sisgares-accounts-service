@@ -174,3 +174,27 @@ func (cc *CompanyController) Delete(w http.ResponseWriter, r *http.Request) {
 
 	render.Render(w, r, nil)
 }
+
+func (cc *CompanyController) FindAddressByCompanyId(w http.ResponseWriter, r *http.Request) {
+	companyId := chi.URLParam(r, "id")
+	address, err := usecase.NewFindAddressByCompanyIdUseCase(cc.CompanyRepository).Execute(companyId)
+
+	if err != nil {
+		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
+		return
+	}
+
+	output := &dto.AddressResponseDto{
+		ID:           address.ID,
+		Street:       address.Street,
+		Number:       address.Number,
+		Complement:   address.Complement,
+		Neighborhood: address.Neighborhood,
+		City:         address.City,
+		State:        address.State,
+		Country:      address.Country,
+		ZipCode:      address.ZipCode,
+	}
+
+	render.Render(w, r, httpResponsePkg.NewAddressResponse(output))
+}
