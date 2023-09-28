@@ -18,6 +18,7 @@ type AddressRepository interface {
 	Update(category *Address) error
 	Delete(id string) error
 	FindAddressByCompanyId(companyId string) (*Address, error)
+	DeleteByCompanyId(companyId string) error
 }
 
 type Address struct {

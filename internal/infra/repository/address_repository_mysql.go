@@ -217,3 +217,26 @@ func (ar *AddressRepositoryMysql) FindAddressByCompanyId(companyId string) (*ent
 
 	return &address, nil
 }
+
+func (ar *AddressRepositoryMysql) DeleteByCompanyId(companyId string) error {
+	sql := `
+		UPDATE
+			addresses
+		SET deleted_at = NOW()
+		WHERE company_id = ?
+	`
+
+	stmt, err := ar.db.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(companyId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
