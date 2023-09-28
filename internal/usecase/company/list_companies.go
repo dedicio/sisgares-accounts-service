@@ -9,7 +9,7 @@ type ListCompanysUseCase struct {
 	Repository entity.CompanyRepository
 }
 
-func NewListCompanysUseCase(companyRepository entity.CompanyRepository) *ListCompanysUseCase {
+func NewListCompaniesUseCase(companyRepository entity.CompanyRepository) *ListCompanysUseCase {
 	return &ListCompanysUseCase{
 		Repository: companyRepository,
 	}
