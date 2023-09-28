@@ -179,7 +179,7 @@ func (ar *AddressRepositoryMysql) Delete(id string) error {
 	return nil
 }
 
-func (ar *AddressRepositoryMysql) FindAddressesByCompanyId(companyId string) (*entity.Address, error) {
+func (ar *AddressRepositoryMysql) FindAddressByCompanyId(companyId string) (*entity.Address, error) {
 	var address entity.Address
 
 	sqlStatement := `

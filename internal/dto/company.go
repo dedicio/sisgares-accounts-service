@@ -1,15 +1,22 @@
 package dto
 
-import (
-	"github.com/dedicio/sisgares-accounts-service/internal/entity"
-)
-
 type CompanyDto struct {
-	ID       string          `json:"id"`
-	Name     string          `json:"name"`
-	Document string          `json:"document"`
-	Address  *entity.Address `json:"address"`
-	Status   string          `json:"status"`
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	Document string            `json:"document"`
+	Address  CompanyAddressDto `json:"address"`
+	Status   string            `json:"status"`
+}
+
+type CompanyAddressDto struct {
+	Street       string `json:"street"`
+	Number       string `json:"number"`
+	Complement   string `json:"complement"`
+	Neighborhood string `json:"neighborhood"`
+	City         string `json:"city"`
+	State        string `json:"state"`
+	Country      string `json:"country"`
+	ZipCode      string `json:"zip_code"`
 }
 
 type AddressDto struct {
