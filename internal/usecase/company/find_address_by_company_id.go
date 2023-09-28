@@ -6,17 +6,17 @@ import (
 )
 
 type FindAddressByCompanyIdUseCase struct {
-	AddressRepository entity.AddressRepository
+	CompanyRepository entity.CompanyRepository
 }
 
-func NewFindAddressByCompanyIdUseCase(addressRepository entity.AddressRepository) *FindAddressByCompanyIdUseCase {
+func NewFindAddressByCompanyIdUseCase(addressRepository entity.CompanyRepository) *FindAddressByCompanyIdUseCase {
 	return &FindAddressByCompanyIdUseCase{
-		AddressRepository: addressRepository,
+		CompanyRepository: addressRepository,
 	}
 }
 
 func (uc FindAddressByCompanyIdUseCase) Execute(companyId string) (*dto.AddressResponseDto, error) {
-	address, err := uc.AddressRepository.FindAddressByCompanyId(companyId)
+	address, err := uc.CompanyRepository.FindAddressByCompanyId(companyId)
 	if err != nil {
 		return nil, err
 	}

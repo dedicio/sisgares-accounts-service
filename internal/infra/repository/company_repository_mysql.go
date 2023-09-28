@@ -16,7 +16,7 @@ func NewCompanyRepositoryMysql(db *sql.DB) *CompanyRepositoryMysql {
 	}
 }
 
-func (pr *CompanyRepositoryMysql) FindById(id string) (*entity.Company, error) {
+func (cr *CompanyRepositoryMysql) FindById(id string) (*entity.Company, error) {
 	var company entity.Company
 
 	sqlStatement := `
@@ -39,7 +39,7 @@ func (pr *CompanyRepositoryMysql) FindById(id string) (*entity.Company, error) {
 		WHERE c.id = ?
 			AND c.deleted_at IS NULL
 	`
-	err := pr.db.QueryRow(sqlStatement, id).Scan(
+	err := cr.db.QueryRow(sqlStatement, id).Scan(
 		&company.ID,
 		&company.Name,
 		&company.Document,
@@ -61,7 +61,7 @@ func (pr *CompanyRepositoryMysql) FindById(id string) (*entity.Company, error) {
 	return &company, nil
 }
 
-func (pr *CompanyRepositoryMysql) FindAll() ([]*entity.Company, error) {
+func (cr *CompanyRepositoryMysql) FindAll() ([]*entity.Company, error) {
 	sql := `
 		SELECT
 			c.id,
@@ -82,7 +82,7 @@ func (pr *CompanyRepositoryMysql) FindAll() ([]*entity.Company, error) {
 		WHERE c.deleted_at IS NULL
 	`
 
-	rows, err := pr.db.Query(sql)
+	rows, err := cr.db.Query(sql)
 
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (pr *CompanyRepositoryMysql) FindAll() ([]*entity.Company, error) {
 	return companies, nil
 }
 
-func (pr *CompanyRepositoryMysql) Create(company *entity.Company) error {
+func (cr *CompanyRepositoryMysql) Create(company *entity.Company) error {
 	sql := `
 		INSERT INTO companies (
 			id,
@@ -139,7 +139,7 @@ func (pr *CompanyRepositoryMysql) Create(company *entity.Company) error {
 		)
 	`
 
-	_, err := pr.db.Exec(
+	_, err := cr.db.Exec(
 		sql,
 		company.ID,
 		company.Name,
@@ -154,7 +154,7 @@ func (pr *CompanyRepositoryMysql) Create(company *entity.Company) error {
 	return nil
 }
 
-func (pr *CompanyRepositoryMysql) Update(company *entity.Company) error {
+func (cr *CompanyRepositoryMysql) Update(company *entity.Company) error {
 	sql := `
 		UPDATE companies, addresses
 		SET
@@ -175,7 +175,7 @@ func (pr *CompanyRepositoryMysql) Update(company *entity.Company) error {
 			AND addresses.company_id = ?
 	`
 
-	_, err := pr.db.Exec(
+	_, err := cr.db.Exec(
 		sql,
 		company.Name,
 		company.Document,
@@ -199,7 +199,7 @@ func (pr *CompanyRepositoryMysql) Update(company *entity.Company) error {
 	return nil
 }
 
-func (pr *CompanyRepositoryMysql) Delete(id string) error {
+func (cr *CompanyRepositoryMysql) Delete(id string) error {
 	sql := `
 		UPDATE companies, addresses
 		SET
@@ -209,11 +209,50 @@ func (pr *CompanyRepositoryMysql) Delete(id string) error {
 			AND addresses.company_id = ?
 	`
 
-	_, err := pr.db.Exec(sql, id)
+	_, err := cr.db.Exec(sql, id)
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (cr *CompanyRepositoryMysql) FindAddressByCompanyId(companyId string) (*entity.Address, error) {
+	var address entity.Address
+
+	sqlStatement := `
+		SELECT
+			id,
+			street,
+			number,
+			complement,
+			neighborhood,
+			city,
+			state,
+			country,
+			zip_code,
+			company_id
+		FROM addresses
+		WHERE company_id = ?
+			AND deleted_at IS NULL
+	`
+	err := cr.db.QueryRow(sqlStatement, companyId).Scan(
+		&address.ID,
+		&address.Street,
+		&address.Number,
+		&address.Complement,
+		&address.Neighborhood,
+		&address.City,
+		&address.State,
+		&address.Country,
+		&address.ZipCode,
+		&address.CompanyId,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &address, nil
 }

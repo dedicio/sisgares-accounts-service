@@ -10,6 +10,7 @@ type CompanyRepository interface {
 	Create(company *Company) error
 	Update(company *Company) error
 	Delete(id string) error
+	FindAddressByCompanyId(companyId string) (*Address, error)
 }
 
 type AddressRepository interface {
@@ -17,7 +18,6 @@ type AddressRepository interface {
 	Create(category *Address) error
 	Update(category *Address) error
 	Delete(id string) error
-	FindAddressByCompanyId(companyId string) (*Address, error)
 	DeleteByCompanyId(companyId string) error
 }
 
