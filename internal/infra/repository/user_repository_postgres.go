@@ -7,17 +7,17 @@ import (
 	"github.com/dedicio/sisgares-accounts-service/pkg/utils"
 )
 
-type UserRepositoryMysql struct {
+type UserRepositoryPostgres struct {
 	db *sql.DB
 }
 
-func NewUserRepositoryMysql(db *sql.DB) *UserRepositoryMysql {
-	return &UserRepositoryMysql{
+func NewUserRepositoryPostgres(db *sql.DB) *UserRepositoryPostgres {
+	return &UserRepositoryPostgres{
 		db: db,
 	}
 }
 
-func (pr *UserRepositoryMysql) FindById(id string) (*entity.User, error) {
+func (pr *UserRepositoryPostgres) FindById(id string) (*entity.User, error) {
 	var user entity.User
 
 	sqlStatement := `
@@ -48,7 +48,7 @@ func (pr *UserRepositoryMysql) FindById(id string) (*entity.User, error) {
 	return &user, nil
 }
 
-func (pr *UserRepositoryMysql) FindAll() ([]*entity.User, error) {
+func (pr *UserRepositoryPostgres) FindAll() ([]*entity.User, error) {
 	sql := `
 		SELECT
 			id,
@@ -90,7 +90,7 @@ func (pr *UserRepositoryMysql) FindAll() ([]*entity.User, error) {
 	return users, nil
 }
 
-func (pr *UserRepositoryMysql) Create(user *entity.User) error {
+func (pr *UserRepositoryPostgres) Create(user *entity.User) error {
 	password, err := utils.HashPassword(user.Password)
 
 	if err != nil {
@@ -140,7 +140,7 @@ func (pr *UserRepositoryMysql) Create(user *entity.User) error {
 	return nil
 }
 
-func (pr *UserRepositoryMysql) Update(user *entity.User) error {
+func (pr *UserRepositoryPostgres) Update(user *entity.User) error {
 	sql := `
 		UPDATE users
 		SET
@@ -169,7 +169,7 @@ func (pr *UserRepositoryMysql) Update(user *entity.User) error {
 	return nil
 }
 
-func (pr *UserRepositoryMysql) Delete(id string) error {
+func (pr *UserRepositoryPostgres) Delete(id string) error {
 	sql := `
 		UPDATE users
 		SET deleted_at = NOW()
@@ -184,7 +184,7 @@ func (pr *UserRepositoryMysql) Delete(id string) error {
 	return nil
 }
 
-func (pr *UserRepositoryMysql) FindByEmail(email string) (*entity.User, error) {
+func (pr *UserRepositoryPostgres) FindByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	sqlStatement := `
 		SELECT

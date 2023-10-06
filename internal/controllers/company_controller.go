@@ -43,7 +43,7 @@ func (cc *CompanyController) FindById(w http.ResponseWriter, r *http.Request) {
 	company, err := usecase.NewFindCompanyByIdUseCase(cc.CompanyRepository).Execute(companyId)
 
 	if err != nil {
-		render.Render(w, r, httpResponsePkg.ErrNotFound(err, "Categoria"))
+		render.Render(w, r, httpResponsePkg.ErrNotFound(err, "Empresa"))
 		return
 	}
 

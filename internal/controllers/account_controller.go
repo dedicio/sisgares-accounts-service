@@ -7,25 +7,26 @@ import (
 	"github.com/dedicio/sisgares-accounts-service/internal/dto"
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 	companyUsecase "github.com/dedicio/sisgares-accounts-service/internal/usecase/company"
+	usecase "github.com/dedicio/sisgares-accounts-service/internal/usecase/user"
 	userUsecase "github.com/dedicio/sisgares-accounts-service/internal/usecase/user"
 	httpResponsePkg "github.com/dedicio/sisgares-accounts-service/pkg/response"
 	"github.com/go-chi/render"
 )
 
 type AccountController struct {
-	LevelRepository   entity.LevelRepository
 	CompanyRepository entity.CompanyRepository
+	LevelRepository   entity.LevelRepository
 	UserRepository    entity.UserRepository
 }
 
 func NewAccountController(
-	levelRepository entity.LevelRepository,
 	companyRepository entity.CompanyRepository,
+	levelRepository entity.LevelRepository,
 	userRepository entity.UserRepository,
 ) *AccountController {
 	return &AccountController{
-		LevelRepository:   levelRepository,
 		CompanyRepository: companyRepository,
+		LevelRepository:   levelRepository,
 		UserRepository:    userRepository,
 	}
 }
@@ -121,8 +122,21 @@ func (ac *AccountController) CreateAccount(w http.ResponseWriter, r *http.Reques
 	render.Render(w, r, httpResponsePkg.NewUserResponse(output))
 }
 
-// criar level
+func (ac *AccountController) Login(w http.ResponseWriter, r *http.Request) {
+	payload := json.NewDecoder(r.Body)
+	login := dto.LoginDto{}
+	err := payload.Decode(&login)
 
-// criar company
+	if err != nil {
+		render.Render(w, r, httpResponsePkg.ErrInvalidRequest(err))
+		return
+	}
 
-// criar user
+	userLogged, err := usecase.NewLoginUseCase(ac.UserRepository).Execute(login)
+	if err != nil {
+		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
+		return
+	}
+
+	render.Render(w, r, httpResponsePkg.NewLoginResponse(userLogged))
+}
