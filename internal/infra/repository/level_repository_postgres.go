@@ -6,17 +6,17 @@ import (
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 )
 
-type LevelRepositoryMysql struct {
+type LevelRepositoryPostgres struct {
 	db *sql.DB
 }
 
-func NewLevelRepositoryMysql(db *sql.DB) *LevelRepositoryMysql {
-	return &LevelRepositoryMysql{
+func NewLevelRepositoryPostgres(db *sql.DB) *LevelRepositoryPostgres {
+	return &LevelRepositoryPostgres{
 		db: db,
 	}
 }
 
-func (cr *LevelRepositoryMysql) FindById(id string) (*entity.Level, error) {
+func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 	var level entity.Level
 
 	sqlStatement := `
@@ -43,7 +43,7 @@ func (cr *LevelRepositoryMysql) FindById(id string) (*entity.Level, error) {
 	return &level, nil
 }
 
-func (cr *LevelRepositoryMysql) FindAll() ([]*entity.Level, error) {
+func (cr *LevelRepositoryPostgres) FindAll() ([]*entity.Level, error) {
 	sql := `
 		SELECT
 			id,
@@ -84,7 +84,7 @@ func (cr *LevelRepositoryMysql) FindAll() ([]*entity.Level, error) {
 	return levels, nil
 }
 
-func (cr *LevelRepositoryMysql) Create(level *entity.Level) error {
+func (cr *LevelRepositoryPostgres) Create(level *entity.Level) error {
 	sql := `
 		INSERT INTO levels (
 			id,
@@ -114,7 +114,7 @@ func (cr *LevelRepositoryMysql) Create(level *entity.Level) error {
 	return nil
 }
 
-func (cr *LevelRepositoryMysql) Update(level *entity.Level) error {
+func (cr *LevelRepositoryPostgres) Update(level *entity.Level) error {
 	sql := `
 		UPDATE
 			levels
@@ -147,7 +147,7 @@ func (cr *LevelRepositoryMysql) Update(level *entity.Level) error {
 	return nil
 }
 
-func (cr *LevelRepositoryMysql) Delete(id string) error {
+func (cr *LevelRepositoryPostgres) Delete(id string) error {
 	sql := `
 		UPDATE
 			levels
@@ -172,7 +172,7 @@ func (cr *LevelRepositoryMysql) Delete(id string) error {
 	return nil
 }
 
-func (cr *LevelRepositoryMysql) FindUsersByLevelId(levelId string) ([]*entity.User, error) {
+func (cr *LevelRepositoryPostgres) FindUsersByLevelId(levelId string) ([]*entity.User, error) {
 	sql := `
 		SELECT
 			id,

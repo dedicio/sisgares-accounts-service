@@ -6,17 +6,17 @@ import (
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 )
 
-type AddressRepositoryMysql struct {
+type AddressRepositoryPostgres struct {
 	db *sql.DB
 }
 
-func NewAddressRepositoryMysql(db *sql.DB) *AddressRepositoryMysql {
-	return &AddressRepositoryMysql{
+func NewAddressRepositoryPostgres(db *sql.DB) *AddressRepositoryPostgres {
+	return &AddressRepositoryPostgres{
 		db: db,
 	}
 }
 
-func (ar *AddressRepositoryMysql) FindById(id string) (*entity.Address, error) {
+func (ar *AddressRepositoryPostgres) FindById(id string) (*entity.Address, error) {
 	var address entity.Address
 
 	sqlStatement := `
@@ -55,7 +55,7 @@ func (ar *AddressRepositoryMysql) FindById(id string) (*entity.Address, error) {
 	return &address, nil
 }
 
-func (ar *AddressRepositoryMysql) Create(address *entity.Address) error {
+func (ar *AddressRepositoryPostgres) Create(address *entity.Address) error {
 	sql := `
 		INSERT INTO addresses (
 			id,
@@ -111,7 +111,7 @@ func (ar *AddressRepositoryMysql) Create(address *entity.Address) error {
 	return nil
 }
 
-func (ar *AddressRepositoryMysql) Update(address *entity.Address) error {
+func (ar *AddressRepositoryPostgres) Update(address *entity.Address) error {
 	sql := `
 		UPDATE
 			addresses
@@ -156,7 +156,7 @@ func (ar *AddressRepositoryMysql) Update(address *entity.Address) error {
 	return nil
 }
 
-func (ar *AddressRepositoryMysql) Delete(id string) error {
+func (ar *AddressRepositoryPostgres) Delete(id string) error {
 	sql := `
 		UPDATE
 			addresses
@@ -179,7 +179,7 @@ func (ar *AddressRepositoryMysql) Delete(id string) error {
 	return nil
 }
 
-func (ar *AddressRepositoryMysql) DeleteByCompanyId(companyId string) error {
+func (ar *AddressRepositoryPostgres) DeleteByCompanyId(companyId string) error {
 	sql := `
 		UPDATE
 			addresses

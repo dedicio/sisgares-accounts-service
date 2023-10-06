@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/dedicio/sisgares-accounts-service/internal/dto"
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 )
@@ -17,6 +19,7 @@ func NewFindCompanyByIdUseCase(companyRepository entity.CompanyRepository) *Find
 
 func (uc FindCompanyByIdUseCase) Execute(id string) (*dto.CompanyDto, error) {
 	company, err := uc.Repository.FindById(id)
+	fmt.Println("usecase", company)
 	if err != nil {
 		return nil, err
 	}

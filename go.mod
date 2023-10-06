@@ -26,4 +26,5 @@ require (
 require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/go-chi/jwtauth/v5 v5.1.1
+	github.com/lib/pq v1.10.9
 )
