@@ -49,5 +49,7 @@ func (routes Routes) Routes() chi.Router {
 		).Routes())
 	})
 
+	// novas rotas abertas
+
 	return router
 }

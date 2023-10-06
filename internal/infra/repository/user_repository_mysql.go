@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
+	"github.com/dedicio/sisgares-accounts-service/pkg/utils"
 )
 
 type UserRepositoryMysql struct {
@@ -90,6 +91,12 @@ func (pr *UserRepositoryMysql) FindAll() ([]*entity.User, error) {
 }
 
 func (pr *UserRepositoryMysql) Create(user *entity.User) error {
+	password, err := utils.HashPassword(user.Password)
+
+	if err != nil {
+		return err
+	}
+
 	sql := `
 		INSERT INTO
 			users (
@@ -115,13 +122,13 @@ func (pr *UserRepositoryMysql) Create(user *entity.User) error {
 			NOW()
 		)
 	`
-	_, err := pr.db.Exec(
+	_, err = pr.db.Exec(
 		sql,
 		user.ID,
 		user.Name,
 		user.Email,
 		user.Phone,
-		user.Password,
+		password,
 		user.LevelId,
 		user.CompanyId,
 	)
@@ -175,4 +182,30 @@ func (pr *UserRepositoryMysql) Delete(id string) error {
 	}
 
 	return nil
+}
+
+func (pr *UserRepositoryMysql) FindByEmail(email string) (*entity.User, error) {
+	var user entity.User
+	sqlStatement := `
+		SELECT
+			id,
+			email,
+			password,
+			company_id
+		FROM users
+		WHERE email = ?
+			AND deleted_at IS NULL
+	`
+	err := pr.db.QueryRow(sqlStatement, email).Scan(
+		&user.ID,
+		&user.Email,
+		&user.Password,
+		&user.CompanyId,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }

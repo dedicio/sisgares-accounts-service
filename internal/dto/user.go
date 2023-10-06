@@ -41,3 +41,21 @@ type PermissionResponseDto struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
+
+type AccountInputDto struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Company  string `json:"company"`
+}
+
+type LoginDto struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginResponseDto struct {
+	ID        string `json:"id"`
+	CompanyID string `json:"company_id"`
+	Hash      string `json:"hash"`
+}

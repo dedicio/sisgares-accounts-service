@@ -10,6 +10,7 @@ type UserRepository interface {
 	Create(user *User) error
 	Update(user *User) error
 	Delete(id string) error
+	FindByEmail(email string) (*User, error)
 }
 
 type LevelRepository interface {
