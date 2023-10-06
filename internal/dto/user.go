@@ -6,7 +6,7 @@ type UserDto struct {
 	Email     string `json:"email"`
 	Phone     string `json:"phone"`
 	Password  string `json:"password"`
-	LevelId   string `json:"category_id"`
+	LevelId   string `json:"level_id"`
 	CompanyId string `json:"company_id"`
 }
 
@@ -15,7 +15,7 @@ type UserResponseDto struct {
 	Name    string `json:"name"`
 	Email   string `json:"email"`
 	Phone   string `json:"phone"`
-	LevelId string `json:"category_id"`
+	LevelId string `json:"level_id"`
 }
 
 type LevelDto struct {

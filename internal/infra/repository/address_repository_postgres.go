@@ -32,7 +32,7 @@ func (ar *AddressRepositoryPostgres) FindById(id string) (*entity.Address, error
 			zip_code,
 			company_id
 		FROM addresses
-		WHERE id = ?
+		WHERE id = $1
 			AND deleted_at IS NULL
 	`
 	err := ar.db.QueryRow(sqlStatement, id).Scan(
@@ -71,15 +71,15 @@ func (ar *AddressRepositoryPostgres) Create(address *entity.Address) error {
 			created_at,
 			updated_at
 		) VALUES (
-			?,
-			?,
-			?,
-			?,
-			?,
-			?,
-			?,
-			?,
-			?,
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7,
+			$8,
+			$9,
 			NOW(),
 			NOW()
 		)
@@ -116,18 +116,18 @@ func (ar *AddressRepositoryPostgres) Update(address *entity.Address) error {
 		UPDATE
 			addresses
 		SET
-			street = ?,
-			number = ?,
-			complement = ?,
-			neighborhood = ?,
-			city = ?,
-			state = ?,
-			country = ?,
-			zip_code = ?,
-			company_id = ?,
+			street = $1,
+			number = $2,
+			complement = $3,
+			neighborhood = $4,
+			city = $5,
+			state = $6,
+			country = $7,
+			zip_code = $8,
+			company_id = $9,
 			updated_at = NOW()
 		WHERE
-			id = ?
+			id = $10
 	`
 
 	stmt, err := ar.db.Prepare(sql)
@@ -161,7 +161,7 @@ func (ar *AddressRepositoryPostgres) Delete(id string) error {
 		UPDATE
 			addresses
 		SET deleted_at = NOW()
-		WHERE id = ?
+		WHERE id = $1
 	`
 
 	stmt, err := ar.db.Prepare(sql)
@@ -184,7 +184,7 @@ func (ar *AddressRepositoryPostgres) DeleteByCompanyId(companyId string) error {
 		UPDATE
 			addresses
 		SET deleted_at = NOW()
-		WHERE company_id = ?
+		WHERE company_id = $1
 	`
 
 	stmt, err := ar.db.Prepare(sql)
