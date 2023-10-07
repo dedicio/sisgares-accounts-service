@@ -60,14 +60,12 @@ jobs:
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
-        if: github.event_name != 'pull_request'
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push release to Docker Hub
         uses: docker/build-push-action@v4
-        if: github.event_name != 'pull_request'
         with:
           push: true
           file: Dockerfile.multistage
