@@ -60,12 +60,14 @@ jobs:
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
+        if: github.event_name != 'pull_request'
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push release to Docker Hub
         uses: docker/build-push-action@v4
+        if: github.event_name != 'pull_request'
         with:
           push: true
           file: Dockerfile.multistage
@@ -74,3 +76,18 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to:   type=local,dest=/tmp/.buildx-cache
+
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -avzr --delete
+          remote_path: ${{ vars.SERVER_WORK_DIR }}
+          remote_host: ${{ secrets.SERVER_SSH_HOST }}
+          remote_user: ${{ secrets.SERVER_SSH_USER }}
+          remote_password: ${{ secrets.SERVER_SSH_PASSWORD }}
+          remote_key: ${{ secrets.SERVER_SSH_SECRET }}
+          rsh: |
+            docker pull dedicio/sisgares-accounts-service:latest \
+            && docker stop sisgares-accounts-service \
+            && docker rm sisgares-accounts-service \
+            && docker run -d --name sisgares-accounts-service
