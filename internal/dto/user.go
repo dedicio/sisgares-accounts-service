@@ -57,5 +57,5 @@ type LoginDto struct {
 type LoginResponseDto struct {
 	ID        string `json:"id"`
 	CompanyID string `json:"company_id"`
-	Hash      string `json:"hash"`
+	Token     string `json:"token"`
 }

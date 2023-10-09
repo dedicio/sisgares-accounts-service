@@ -38,6 +38,5 @@ func (uc LoginUseCase) Execute(login dto.LoginDto) (*dto.LoginResponseDto, error
 	return &dto.LoginResponseDto{
 		ID:        user.ID,
 		CompanyID: user.CompanyId,
-		Hash:      "string-aleatoria",
 	}, nil
 }

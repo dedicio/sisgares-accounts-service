@@ -18,7 +18,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /build ./cmd/api/main.go
 # But we can (optionally) document in the Dockerfile what ports
 # the application is going to listen on by default.
 # https://docs.docker.com/engine/reference/builder/#expose
-EXPOSE 3000
+EXPOSE 3001
 
 # Run
 CMD [ "/build" ]
