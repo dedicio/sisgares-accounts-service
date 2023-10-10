@@ -48,7 +48,7 @@ func (pr *UserRepositoryPostgres) FindById(id string) (*entity.User, error) {
 	return &user, nil
 }
 
-func (pr *UserRepositoryPostgres) FindAll() ([]*entity.User, error) {
+func (pr *UserRepositoryPostgres) FindAll(companyID string) ([]*entity.User, error) {
 	sql := `
 		SELECT
 			id,
@@ -58,9 +58,10 @@ func (pr *UserRepositoryPostgres) FindAll() ([]*entity.User, error) {
 			level_id,
 			company_id 
 		FROM users 
-		WHERE deleted_at IS NULL
+		WHERE company_id = $1
+			AND deleted_at IS NULL
 	`
-	rows, err := pr.db.Query(sql)
+	rows, err := pr.db.Query(sql, companyID)
 	if err != nil {
 		return nil, err
 	}

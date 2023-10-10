@@ -44,7 +44,7 @@ func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 	return &level, nil
 }
 
-func (cr *LevelRepositoryPostgres) FindAll() ([]*entity.Level, error) {
+func (cr *LevelRepositoryPostgres) FindAll(companyID string) ([]*entity.Level, error) {
 	sql := `
 		SELECT
 			id,
@@ -52,10 +52,11 @@ func (cr *LevelRepositoryPostgres) FindAll() ([]*entity.Level, error) {
 			permissions,
 			company_id
 		FROM levels
-		WHERE deleted_at IS NULL
+		WHERE company_id = $1
+			AND deleted_at IS NULL
 	`
 
-	rows, err := cr.db.Query(sql)
+	rows, err := cr.db.Query(sql, companyID)
 	if err != nil {
 		return nil, err
 	}

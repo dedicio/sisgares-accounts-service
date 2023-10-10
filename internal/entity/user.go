@@ -6,7 +6,7 @@ import (
 
 type UserRepository interface {
 	FindById(id string) (*User, error)
-	FindAll() ([]*User, error)
+	FindAll(companyID string) ([]*User, error)
 	Create(user *User) error
 	Update(user *User) error
 	Delete(id string) error
@@ -15,7 +15,7 @@ type UserRepository interface {
 
 type LevelRepository interface {
 	FindById(id string) (*Level, error)
-	FindAll() ([]*Level, error)
+	FindAll(companyID string) ([]*Level, error)
 	Create(level *Level) error
 	Update(level *Level) error
 	Delete(id string) error

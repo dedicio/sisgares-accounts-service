@@ -15,8 +15,8 @@ func NewListLevelsUseCase(levelRepository entity.LevelRepository) *ListLevelsUse
 	}
 }
 
-func (uc ListLevelsUseCase) Execute() ([]*dto.LevelResponseDto, error) {
-	levels, err := uc.Repository.FindAll()
+func (uc ListLevelsUseCase) Execute(companyID string) ([]*dto.LevelResponseDto, error) {
+	levels, err := uc.Repository.FindAll(companyID)
 	if err != nil {
 		return nil, err
 	}

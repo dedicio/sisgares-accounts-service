@@ -23,6 +23,7 @@ func NewAddressController(addressRepository entity.AddressRepository) *AddressCo
 }
 
 func (ac *AddressController) Create(w http.ResponseWriter, r *http.Request) {
+	companyID := r.Header.Get("X-Company-ID")
 	payload := json.NewDecoder(r.Body)
 	address := dto.AddressDto{}
 	err := payload.Decode(&address)
@@ -32,6 +33,7 @@ func (ac *AddressController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	address.CompanyId = companyID
 	addressSaved, err := usecase.NewCreateAddressUseCase(ac.Repository).Execute(address)
 
 	if err != nil {

@@ -23,7 +23,8 @@ func NewUserController(userRepository entity.UserRepository) *UserController {
 }
 
 func (uc *UserController) FindAll(w http.ResponseWriter, r *http.Request) {
-	users, err := usecase.NewListUsersUseCase(uc.Repository).Execute()
+	companyID := r.Header.Get("X-Company-ID")
+	users, err := usecase.NewListUsersUseCase(uc.Repository).Execute(companyID)
 
 	if err != nil {
 		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
@@ -46,15 +47,16 @@ func (uc *UserController) FindById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Create(w http.ResponseWriter, r *http.Request) {
+	companyID := r.Header.Get("X-Company-ID")
 	payload := json.NewDecoder(r.Body)
 	user := dto.UserDto{}
 	err := payload.Decode(&user)
-
 	if err != nil {
 		render.Render(w, r, httpResponsePkg.ErrInvalidRequest(err))
 		return
 	}
 
+	user.CompanyId = companyID
 	userSaved, err := usecase.NewCreateUserUseCase(uc.Repository).Execute(user)
 
 	if err != nil {
