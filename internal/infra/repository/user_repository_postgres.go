@@ -29,7 +29,7 @@ func (pr *UserRepositoryPostgres) FindById(id string) (*entity.User, error) {
 			level_id,
 			company_id
 		FROM users
-		WHERE id = ?
+		WHERE id = $1
 			AND deleted_at IS NULL
 	`
 	err := pr.db.QueryRow(sqlStatement, id).Scan(
@@ -48,7 +48,7 @@ func (pr *UserRepositoryPostgres) FindById(id string) (*entity.User, error) {
 	return &user, nil
 }
 
-func (pr *UserRepositoryPostgres) FindAll() ([]*entity.User, error) {
+func (pr *UserRepositoryPostgres) FindAll(companyID string) ([]*entity.User, error) {
 	sql := `
 		SELECT
 			id,
@@ -58,9 +58,10 @@ func (pr *UserRepositoryPostgres) FindAll() ([]*entity.User, error) {
 			level_id,
 			company_id 
 		FROM users 
-		WHERE deleted_at IS NULL
+		WHERE company_id = $1
+			AND deleted_at IS NULL
 	`
-	rows, err := pr.db.Query(sql)
+	rows, err := pr.db.Query(sql, companyID)
 	if err != nil {
 		return nil, err
 	}
@@ -111,13 +112,13 @@ func (pr *UserRepositoryPostgres) Create(user *entity.User) error {
 				updated_at
 			)
 		VALUES (
-			?,
-			?,
-			?,
-			?,
-			?,
-			?,
-			?,
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7,
 			NOW(),
 			NOW()
 		)
@@ -144,13 +145,13 @@ func (pr *UserRepositoryPostgres) Update(user *entity.User) error {
 	sql := `
 		UPDATE users
 		SET
-			name = ?,
-			email = ?,
-			phone = ?,
-			level_id = ?,
-			company_id = ?
+			name = $1,
+			email = $2,
+			phone = $3,
+			level_id = $4,
+			company_id = $5,
 		WHERE
-			id = ?
+			id = $6
 	`
 	_, err := pr.db.Exec(
 		sql,
@@ -173,7 +174,7 @@ func (pr *UserRepositoryPostgres) Delete(id string) error {
 	sql := `
 		UPDATE users
 		SET deleted_at = NOW()
-		WHERE id = ?
+		WHERE id = $1
 	`
 	_, err := pr.db.Exec(sql, id)
 
@@ -193,7 +194,7 @@ func (pr *UserRepositoryPostgres) FindByEmail(email string) (*entity.User, error
 			password,
 			company_id
 		FROM users
-		WHERE email = ?
+		WHERE email = $1
 			AND deleted_at IS NULL
 	`
 	err := pr.db.QueryRow(sqlStatement, email).Scan(

@@ -19,7 +19,7 @@ func NewLevelResponse(product *dto.LevelResponseDto) *LevelResponse {
 }
 
 type LevelsResponse struct {
-	Levels []*dto.LevelResponseDto
+	Levels []*dto.LevelResponseDto `json:"items"`
 }
 
 func (pr *LevelsResponse) Render(w http.ResponseWriter, r *http.Request) error {

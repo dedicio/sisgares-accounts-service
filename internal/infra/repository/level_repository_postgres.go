@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 )
@@ -26,7 +27,7 @@ func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 			permissions,
 			company_id
 		FROM levels
-		WHERE id = ?
+		WHERE id = $1
 			AND deleted_at IS NULL
 	`
 	err := cr.db.QueryRow(sqlStatement, id).Scan(
@@ -43,7 +44,7 @@ func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 	return &level, nil
 }
 
-func (cr *LevelRepositoryPostgres) FindAll() ([]*entity.Level, error) {
+func (cr *LevelRepositoryPostgres) FindAll(companyID string) ([]*entity.Level, error) {
 	sql := `
 		SELECT
 			id,
@@ -51,10 +52,11 @@ func (cr *LevelRepositoryPostgres) FindAll() ([]*entity.Level, error) {
 			permissions,
 			company_id
 		FROM levels
-		WHERE deleted_at IS NULL
+		WHERE company_id = $1
+			AND deleted_at IS NULL
 	`
 
-	rows, err := cr.db.Query(sql)
+	rows, err := cr.db.Query(sql, companyID)
 	if err != nil {
 		return nil, err
 	}
@@ -90,8 +92,17 @@ func (cr *LevelRepositoryPostgres) Create(level *entity.Level) error {
 			id,
 			name,
 			permissions,
-			company_id
-		) VALUES (?, ?, ?)
+			company_id,
+			created_at,
+			updated_at
+		) VALUES (
+			$1,
+			$2,
+			$3,
+			$4,
+			NOW(),
+			NOW()
+		)
 	`
 
 	stmt, err := cr.db.Prepare(sql)
@@ -103,7 +114,7 @@ func (cr *LevelRepositoryPostgres) Create(level *entity.Level) error {
 	_, err = stmt.Exec(
 		level.ID,
 		level.Name,
-		level.Permissions,
+		strings.Join(level.Permissions, ", "),
 		level.CompanyId,
 	)
 
@@ -119,12 +130,12 @@ func (cr *LevelRepositoryPostgres) Update(level *entity.Level) error {
 		UPDATE
 			levels
 		SET
-			name = ?,
-			permissions = ?,
-			company_id = ?,
+			name = $1,
+			permissions = $2,
+			company_id = $3,
 			updated_at = NOW()
 		WHERE
-			id = ?
+			id = $4
 	`
 
 	stmt, err := cr.db.Prepare(sql)
@@ -154,7 +165,7 @@ func (cr *LevelRepositoryPostgres) Delete(id string) error {
 		SET
 			deleted_at = NOW()
 		WHERE
-			id = ?
+			id = $1
 	`
 
 	stmt, err := cr.db.Prepare(sql)
@@ -182,7 +193,7 @@ func (cr *LevelRepositoryPostgres) FindUsersByLevelId(levelId string) ([]*entity
 			level_id,
 			company_id 
 		FROM users 
-		WHERE level_id = ? 
+		WHERE level_id = $1
 			AND deleted_at IS NULL
 	`
 	rows, err := cr.db.Query(sql, levelId)

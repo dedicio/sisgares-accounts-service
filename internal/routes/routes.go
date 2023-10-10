@@ -42,7 +42,15 @@ func (routes Routes) Routes() chi.Router {
 		).Routes())
 	})
 
-	// novas rotas abertas
+	router.Route("/public", func(router chi.Router) {
+		router.Route("/v1", func(router chi.Router) {
+			router.Mount("/account", NewAccountsRoutes(
+				companyRepository,
+				levelRepository,
+				userRepository,
+			).Routes())
+		})
+	})
 
 	return router
 }

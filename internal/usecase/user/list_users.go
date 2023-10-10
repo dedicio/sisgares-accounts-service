@@ -15,8 +15,8 @@ func NewListUsersUseCase(userRepository entity.UserRepository) *ListUsersUseCase
 	}
 }
 
-func (uc ListUsersUseCase) Execute() ([]*dto.UserResponseDto, error) {
-	users, err := uc.UserRepository.FindAll()
+func (uc ListUsersUseCase) Execute(companyID string) ([]*dto.UserResponseDto, error) {
+	users, err := uc.UserRepository.FindAll(companyID)
 	if err != nil {
 		return nil, err
 	}

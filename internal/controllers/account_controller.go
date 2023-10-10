@@ -7,8 +7,8 @@ import (
 	"github.com/dedicio/sisgares-accounts-service/internal/dto"
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 	companyUsecase "github.com/dedicio/sisgares-accounts-service/internal/usecase/company"
-	usecase "github.com/dedicio/sisgares-accounts-service/internal/usecase/user"
 	userUsecase "github.com/dedicio/sisgares-accounts-service/internal/usecase/user"
+	"github.com/dedicio/sisgares-accounts-service/pkg/authentication"
 	httpResponsePkg "github.com/dedicio/sisgares-accounts-service/pkg/response"
 	"github.com/go-chi/render"
 )
@@ -112,6 +112,8 @@ func (ac *AccountController) CreateAccount(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	go authentication.NewAuthenticationService().CreateConsumer(userSaved.Email)
+
 	output := &dto.UserResponseDto{
 		ID:      userSaved.ID,
 		Name:    userSaved.Name,
@@ -132,11 +134,18 @@ func (ac *AccountController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userLogged, err := usecase.NewLoginUseCase(ac.UserRepository).Execute(login)
+	userLogged, err := userUsecase.NewLoginUseCase(ac.UserRepository).Execute(login)
 	if err != nil {
 		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
 		return
 	}
+
+	token, err := authentication.NewAuthenticationService().GenerateJwt(login.Email)
+	if err != nil {
+		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
+		return
+	}
+	userLogged.Token = token
 
 	render.Render(w, r, httpResponsePkg.NewLoginResponse(userLogged))
 }

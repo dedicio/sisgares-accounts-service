@@ -23,7 +23,8 @@ func NewLevelController(levelRepository entity.LevelRepository) *LevelController
 }
 
 func (lc *LevelController) FindAll(w http.ResponseWriter, r *http.Request) {
-	levels, err := usecase.NewListLevelsUseCase(lc.Repository).Execute()
+	companyID := r.Header.Get("X-Company-ID")
+	levels, err := usecase.NewListLevelsUseCase(lc.Repository).Execute(companyID)
 
 	if err != nil {
 		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
@@ -46,6 +47,7 @@ func (lc *LevelController) FindById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (lc *LevelController) Create(w http.ResponseWriter, r *http.Request) {
+	companyID := r.Header.Get("X-Company-ID")
 	payload := json.NewDecoder(r.Body)
 	level := dto.LevelDto{}
 	err := payload.Decode(&level)
@@ -55,6 +57,7 @@ func (lc *LevelController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	level.CompanyId = companyID
 	levelSaved, err := usecase.NewCreateLevelUseCase(lc.Repository).Execute(level)
 
 	if err != nil {
