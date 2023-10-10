@@ -19,7 +19,7 @@ func NewAddressResponse(category *dto.AddressResponseDto) *AddressResponse {
 }
 
 type AddressesResponse struct {
-	Addresses []*dto.AddressResponseDto
+	Addresses []*dto.AddressResponseDto `json:"items"`
 }
 
 func (cr *AddressesResponse) Render(w http.ResponseWriter, r *http.Request) error {

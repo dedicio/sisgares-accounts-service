@@ -19,7 +19,7 @@ func NewCompanyResponse(category *dto.CompanyDto) *CompanyResponse {
 }
 
 type CompaniesResponse struct {
-	Companies []*dto.CompanyDto
+	Companies []*dto.CompanyDto `json:"items"`
 }
 
 func (cr *CompaniesResponse) Render(w http.ResponseWriter, r *http.Request) error {
