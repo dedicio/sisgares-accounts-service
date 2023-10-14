@@ -54,6 +54,8 @@ type LoginDto struct {
 
 type LoginResponseDto struct {
 	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Level     string `json:"level"`
 	CompanyID string `json:"company_id"`
 	Token     string `json:"token"`
 }

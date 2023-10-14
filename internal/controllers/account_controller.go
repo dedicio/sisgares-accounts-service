@@ -132,7 +132,10 @@ func (ac *AccountController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userLogged, err := userUsecase.NewLoginUseCase(ac.UserRepository).Execute(login)
+	userLogged, err := userUsecase.NewLoginUseCase(
+		ac.UserRepository,
+		ac.LevelRepository,
+	).Execute(login)
 	if err != nil {
 		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
 		return

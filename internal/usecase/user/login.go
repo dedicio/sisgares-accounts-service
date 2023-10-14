@@ -1,20 +1,23 @@
 package usecase
 
 import (
-	"fmt"
-
 	"github.com/dedicio/sisgares-accounts-service/internal/dto"
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 	"github.com/dedicio/sisgares-accounts-service/pkg/utils"
 )
 
 type LoginUseCase struct {
-	UserRepository entity.UserRepository
+	UserRepository  entity.UserRepository
+	LevelRepository entity.LevelRepository
 }
 
-func NewLoginUseCase(userRepository entity.UserRepository) *LoginUseCase {
+func NewLoginUseCase(
+	userRepository entity.UserRepository,
+	levelRepository entity.LevelRepository,
+) *LoginUseCase {
 	return &LoginUseCase{
-		UserRepository: userRepository,
+		UserRepository:  userRepository,
+		LevelRepository: levelRepository,
 	}
 }
 
@@ -33,10 +36,15 @@ func (uc LoginUseCase) Execute(login dto.LoginDto) (*dto.LoginResponseDto, error
 		return nil, err
 	}
 
-	fmt.Println("User: ", user, "enviou para o client")
+	level, err := uc.LevelRepository.FindById(user.LevelId)
+	if err != nil {
+		return nil, err
+	}
 
 	return &dto.LoginResponseDto{
 		ID:        user.ID,
+		Name:      user.Name,
+		Level:     level.Name,
 		CompanyID: user.CompanyId,
 	}, nil
 }
