@@ -38,23 +38,20 @@ func NewPermission(name string, companyId string) *Permission {
 }
 
 type Level struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	CompanyId   string   `json:"company_id"`
-	Permissions []string `json:"permissions"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	CompanyId string `json:"company_id"`
 }
 
 func NewLevel(
 	name string,
 	companyId string,
-	permissions []string,
 ) *Level {
 	id := utils.NewUUID()
 	return &Level{
-		ID:          id,
-		Name:        name,
-		CompanyId:   companyId,
-		Permissions: permissions,
+		ID:        id,
+		Name:      name,
+		CompanyId: companyId,
 	}
 }
 

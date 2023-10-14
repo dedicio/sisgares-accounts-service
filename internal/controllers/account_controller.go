@@ -73,13 +73,11 @@ func (ac *AccountController) CreateAccount(w http.ResponseWriter, r *http.Reques
 	level := entity.NewLevel(
 		"Administrador",
 		companySaved.ID,
-		[]string{},
 	)
 	levelDto := dto.LevelDto{
-		ID:          level.ID,
-		Name:        level.Name,
-		Permissions: level.Permissions,
-		CompanyId:   level.CompanyId,
+		ID:        level.ID,
+		Name:      level.Name,
+		CompanyId: level.CompanyId,
 	}
 
 	levelSaved, err := userUsecase.NewCreateLevelUseCase(ac.LevelRepository).Execute(levelDto)

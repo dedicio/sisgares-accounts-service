@@ -22,9 +22,8 @@ func (uc FindLevelByIdUseCase) Execute(id string) (*dto.LevelResponseDto, error)
 	}
 
 	output := &dto.LevelResponseDto{
-		ID:          level.ID,
-		Name:        level.Name,
-		Permissions: level.Permissions,
+		ID:   level.ID,
+		Name: level.Name,
 	}
 
 	return output, nil

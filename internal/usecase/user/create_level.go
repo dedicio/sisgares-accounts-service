@@ -19,7 +19,6 @@ func (uc CreateLevelUseCase) Execute(input dto.LevelDto) (*dto.LevelDto, error) 
 	level := entity.NewLevel(
 		input.Name,
 		input.CompanyId,
-		input.Permissions,
 	)
 
 	err := uc.Repository.Create(level)
@@ -28,9 +27,8 @@ func (uc CreateLevelUseCase) Execute(input dto.LevelDto) (*dto.LevelDto, error) 
 	}
 
 	output := &dto.LevelDto{
-		ID:          level.ID,
-		Name:        level.Name,
-		Permissions: level.Permissions,
+		ID:   level.ID,
+		Name: level.Name,
 	}
 
 	return output, nil

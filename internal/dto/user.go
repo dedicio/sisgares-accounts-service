@@ -19,16 +19,14 @@ type UserResponseDto struct {
 }
 
 type LevelDto struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	Permissions []string `json:"permissions"`
-	CompanyId   string   `json:"company_id"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	CompanyId string `json:"company_id"`
 }
 
 type LevelResponseDto struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	Permissions []string `json:"permissions"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type PermissionDto struct {

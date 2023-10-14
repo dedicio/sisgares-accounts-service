@@ -23,7 +23,6 @@ func (uc UpdateLevelUseCase) Execute(input dto.LevelDto) error {
 
 	level.Name = input.Name
 	level.CompanyId = input.CompanyId
-	level.Permissions = input.Permissions
 
 	err = uc.Repository.Update(level)
 	if err != nil {

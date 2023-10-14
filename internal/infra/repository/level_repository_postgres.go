@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"strings"
 
 	"github.com/dedicio/sisgares-accounts-service/internal/entity"
 )
@@ -24,7 +23,6 @@ func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 		SELECT
 			id,
 			name,
-			permissions,
 			company_id
 		FROM levels
 		WHERE id = $1
@@ -33,7 +31,6 @@ func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 	err := cr.db.QueryRow(sqlStatement, id).Scan(
 		&level.ID,
 		&level.Name,
-		&level.Permissions,
 		&level.CompanyId,
 	)
 
@@ -49,7 +46,6 @@ func (cr *LevelRepositoryPostgres) FindAll(companyID string) ([]*entity.Level, e
 		SELECT
 			id,
 			name,
-			permissions,
 			company_id
 		FROM levels
 		WHERE company_id = $1
@@ -69,7 +65,6 @@ func (cr *LevelRepositoryPostgres) FindAll(companyID string) ([]*entity.Level, e
 		err := rows.Scan(
 			&level.ID,
 			&level.Name,
-			&level.Permissions,
 			&level.CompanyId,
 		)
 		if err != nil {
@@ -91,7 +86,6 @@ func (cr *LevelRepositoryPostgres) Create(level *entity.Level) error {
 		INSERT INTO levels (
 			id,
 			name,
-			permissions,
 			company_id,
 			created_at,
 			updated_at
@@ -99,7 +93,6 @@ func (cr *LevelRepositoryPostgres) Create(level *entity.Level) error {
 			$1,
 			$2,
 			$3,
-			$4,
 			NOW(),
 			NOW()
 		)
@@ -114,7 +107,6 @@ func (cr *LevelRepositoryPostgres) Create(level *entity.Level) error {
 	_, err = stmt.Exec(
 		level.ID,
 		level.Name,
-		strings.Join(level.Permissions, ", "),
 		level.CompanyId,
 	)
 
@@ -131,8 +123,7 @@ func (cr *LevelRepositoryPostgres) Update(level *entity.Level) error {
 			levels
 		SET
 			name = $1,
-			permissions = $2,
-			company_id = $3,
+			company_id = $2,
 			updated_at = NOW()
 		WHERE
 			id = $4
@@ -146,7 +137,6 @@ func (cr *LevelRepositoryPostgres) Update(level *entity.Level) error {
 
 	_, err = stmt.Exec(
 		level.Name,
-		level.Permissions,
 		level.CompanyId,
 		level.ID,
 	)

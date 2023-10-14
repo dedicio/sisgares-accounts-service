@@ -24,9 +24,8 @@ func (uc ListLevelsUseCase) Execute(companyID string) ([]*dto.LevelResponseDto, 
 	var output []*dto.LevelResponseDto
 	for _, level := range levels {
 		output = append(output, &dto.LevelResponseDto{
-			ID:          level.ID,
-			Name:        level.Name,
-			Permissions: level.Permissions,
+			ID:   level.ID,
+			Name: level.Name,
 		})
 	}
 

@@ -66,9 +66,8 @@ func (lc *LevelController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	output := &dto.LevelResponseDto{
-		ID:          levelSaved.ID,
-		Name:        levelSaved.Name,
-		Permissions: levelSaved.Permissions,
+		ID:   levelSaved.ID,
+		Name: levelSaved.Name,
 	}
 
 	render.Render(w, r, httpResponsePkg.NewLevelResponse(output))
@@ -92,9 +91,8 @@ func (lc *LevelController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	output := &dto.LevelResponseDto{
-		ID:          level.ID,
-		Name:        level.Name,
-		Permissions: level.Permissions,
+		ID:   level.ID,
+		Name: level.Name,
 	}
 
 	render.Render(w, r, httpResponsePkg.NewLevelResponse(output))
