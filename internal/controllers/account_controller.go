@@ -70,17 +70,33 @@ func (ac *AccountController) CreateAccount(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	level := entity.NewLevel(
+	levelAdmin := entity.NewLevel(
 		"Administrador",
 		companySaved.ID,
 	)
-	levelDto := dto.LevelDto{
-		ID:        level.ID,
-		Name:      level.Name,
-		CompanyId: level.CompanyId,
+	levelAdminPayload := dto.LevelDto{
+		ID:        levelAdmin.ID,
+		Name:      levelAdmin.Name,
+		CompanyId: levelAdmin.CompanyId,
 	}
 
-	levelSaved, err := userUsecase.NewCreateLevelUseCase(ac.LevelRepository).Execute(levelDto)
+	levelAtendant := entity.NewLevel(
+		"Atendente",
+		companySaved.ID,
+	)
+	levelAtendantPayload := dto.LevelDto{
+		ID:        levelAtendant.ID,
+		Name:      levelAtendant.Name,
+		CompanyId: levelAtendant.CompanyId,
+	}
+
+	levelAdminSaved, err := userUsecase.NewCreateLevelUseCase(ac.LevelRepository).Execute(levelAdminPayload)
+	if err != nil {
+		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
+		return
+	}
+
+	_, err = userUsecase.NewCreateLevelUseCase(ac.LevelRepository).Execute(levelAtendantPayload)
 	if err != nil {
 		render.Render(w, r, httpResponsePkg.ErrInternalServerError(err))
 		return
@@ -91,7 +107,7 @@ func (ac *AccountController) CreateAccount(w http.ResponseWriter, r *http.Reques
 		account.Email,
 		"",
 		account.Password,
-		levelSaved.ID,
+		levelAdminSaved.ID,
 		companySaved.ID,
 	)
 	userDto := dto.UserDto{

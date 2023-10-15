@@ -16,7 +16,7 @@ func NewLevelRepositoryPostgres(db *sql.DB) *LevelRepositoryPostgres {
 	}
 }
 
-func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
+func (repo *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 	var level entity.Level
 
 	sqlStatement := `
@@ -28,13 +28,14 @@ func (cr *LevelRepositoryPostgres) FindById(id string) (*entity.Level, error) {
 		WHERE id = $1
 			AND deleted_at IS NULL
 	`
-	err := cr.db.QueryRow(sqlStatement, id).Scan(
+	err := repo.db.QueryRow(sqlStatement, id).Scan(
 		&level.ID,
 		&level.Name,
 		&level.CompanyId,
 	)
-
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return &level, nil
+	} else if err != nil {
 		return nil, err
 	}
 

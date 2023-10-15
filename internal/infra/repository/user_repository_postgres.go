@@ -190,8 +190,10 @@ func (pr *UserRepositoryPostgres) FindByEmail(email string) (*entity.User, error
 	sqlStatement := `
 		SELECT
 			id,
+			name,
 			email,
 			password,
+			level_id,
 			company_id
 		FROM users
 		WHERE email = $1
@@ -199,8 +201,10 @@ func (pr *UserRepositoryPostgres) FindByEmail(email string) (*entity.User, error
 	`
 	err := pr.db.QueryRow(sqlStatement, email).Scan(
 		&user.ID,
+		&user.Name,
 		&user.Email,
 		&user.Password,
+		&user.LevelId,
 		&user.CompanyId,
 	)
 
