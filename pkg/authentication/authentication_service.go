@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/dedicio/sisgares-accounts-service/internal/dto"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var client = &http.Client{}
